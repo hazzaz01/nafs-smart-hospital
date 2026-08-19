@@ -1,5 +1,7 @@
 # Smart Hospital — Local Development Setup
 
+For the complete first-time installation, database import, migration, update, and troubleshooting instructions, see [INSTALLATION.md](INSTALLATION.md).
+
 This guide takes a new machine from a fresh clone to a working local installation. The recommended setup is Windows with Laragon because that matches the development environment used by this project.
 
 ## What you need
@@ -105,7 +107,7 @@ These credentials are for local development only. Never use them in a deployed e
 
 ## 6. Apply the project migrations
 
-The seed database predates the custom ophthalmology modules, so migrations 125 through 128 must be applied.
+The seed database predates the custom ophthalmology modules, so migrations 125 through 131 must be applied.
 
 1. Open `application/config/migration.php`.
 2. Change:
