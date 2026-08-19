@@ -1,0 +1,103 @@
+# ------------------------------------------------------------
+# Local configuration and secrets
+# ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+application/config/database.php
+application/config/license.php
+!application/config/database.example.php
+!application/config/license.example.php
+
+# ------------------------------------------------------------
+# CodeIgniter runtime files
+# ------------------------------------------------------------
+application/cache/*
+!application/cache/.htaccess
+!application/cache/index.html
+
+application/logs/*
+!application/logs/.htaccess
+!application/logs/index.html
+
+application/sessions/*
+!application/sessions/.htaccess
+!application/sessions/index.html
+
+temp/*
+!temp/.gitkeep
+!temp/index.html
+
+# Application-generated database backups
+backup/*
+!backup/.gitkeep
+!backup/index.html
+!backup/database_backup/
+backup/database_backup/*
+!backup/database_backup/db_ver_5.0_2025-05-15_17-56-35.sql
+
+# User-upload staging and temporary files
+uploads/**/*.tmp
+uploads/**/*.temp
+uploads/**/*.part
+uploads/**/~*
+
+# ------------------------------------------------------------
+# PHP and JavaScript dependencies
+# ------------------------------------------------------------
+/vendor/
+/node_modules/
+composer.phar
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test, coverage, and build output
+/coverage/
+.phpunit.result.cache
+.phpunit.cache/
+/build/
+/dist/
+
+# ------------------------------------------------------------
+# Local tooling and editor state
+# ------------------------------------------------------------
+.codegraph/
+.idea/
+.vscode/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+# Local web-server configuration
+.htaccess.local
+php.ini
+.user.ini
+
+# ------------------------------------------------------------
+# OS and temporary artifacts
+# ------------------------------------------------------------
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.orig
+*~
+
+# Archives and database dumps created during local work
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.sql.gz
+*.sql.zip
