@@ -39,6 +39,17 @@
                         <li class="<?php echo set_Submenu('admin/glaucoma/iop'); ?>"><a href="<?php echo site_url('admin/glaucoma/iop'); ?>"><i class="fa fa-line-chart"></i> IOP Tracking</a></li>
                     </ul>
                 </li>
+                <li class="treeview <?php echo set_Topmenu('DR_Screening'); ?>">
+                    <a href="#">
+                        <i class="fa fa-eye"></i> <span>DR Screening</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="<?php echo site_url('admin/drscreening'); ?>"><i class="fa fa-circle-o"></i> All Patients</a></li>
+                        <li><a href="<?php echo site_url('admin/drscreening/create'); ?>"><i class="fa fa-circle-o"></i> New Screening</a></li>
+                        <li class="<?php echo set_Submenu('admin/drscreening/ai_analysis'); ?>"><a href="<?php echo site_url('admin/drscreening/ai_analysis'); ?>"><i class="fa fa-magic"></i> AI Analysis</a></li>
+                    </ul>
+                </li>
             <?php } ?>
 
            <?php

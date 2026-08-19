@@ -105,7 +105,7 @@ These credentials are for local development only. Never use them in a deployed e
 
 ## 6. Apply the project migrations
 
-The seed database predates the custom ophthalmology modules, so migrations 125 through 127 must be applied.
+The seed database predates the custom ophthalmology modules, so migrations 125 through 128 must be applied.
 
 1. Open `application/config/migration.php`.
 2. Change:
@@ -123,7 +123,7 @@ $config['migration_enabled'] = true;
 3. Confirm that the version is:
 
 ```php
-$config['migration_version'] = 127;
+$config['migration_version'] = 128;
 ```
 
 4. Open this URL in a browser:
@@ -183,6 +183,14 @@ http://localhost/smart-hospital/admin/glaucoma
 
 Confirm that **Glaucoma Center** contains **All Patients**, **New Patient**, and **IOP Tracking**, and that a doctor can create a glaucoma record and append longitudinal IOP readings.
 
+Then open:
+
+```text
+http://localhost/smart-hospital/admin/drscreening
+```
+
+Confirm that **DR Screening** contains **All Patients**, **New Screening**, and **AI Analysis**.
+
 ## 8. Required writable directories
 
 Laragon on Windows normally handles these permissions automatically. If the application cannot write logs, cache, uploaded files, or sessions, make sure the current Windows user has Modify permission on:
@@ -213,7 +221,7 @@ If Laragon is not available:
 5. Create the `smart_hospital` database and import the same SQL file.
 6. Copy the example configuration files as described above.
 7. Edit `application/config/config.php` and set `base_url` to the exact local URL, including the trailing slash.
-8. Apply migrations 125 through 127 using the migration steps above.
+8. Apply migrations 125 through 128 using the migration steps above.
 
 Example Apache directory configuration:
 
@@ -236,6 +244,10 @@ The Eye Examination tables were not migrated. Repeat step 6 and confirm that `ey
 ### HTTP 500 on `/admin/glaucoma`
 
 The Glaucoma Center tables were not migrated. Repeat step 6 and confirm that `glaucoma_records` and `glaucoma_iop_readings` exist in the `smart_hospital` database.
+
+### HTTP 500 on `/admin/drscreening`
+
+The DR Screening table was not migrated. Repeat step 6 and confirm that `dr_screenings` exists in the `smart_hospital` database.
 
 ### `connection failed: Unknown database 'smart_hospital'`
 
@@ -284,3 +296,4 @@ Reload the failing page, then inspect the newest file under `application/logs`. 
 - Doctor login works with `ajay@gmail.com` / `Admin@123`.
 - `/admin/eyeexam` loads without an HTTP 500 error.
 - `/admin/glaucoma` loads without an HTTP 500 error.
+- `/admin/drscreening` loads without an HTTP 500 error.
