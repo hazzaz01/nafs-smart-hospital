@@ -191,6 +191,12 @@ http://localhost/smart-hospital/admin/drscreening
 
 Confirm that **DR Screening** contains **All Patients**, **New Screening**, and **AI Analysis**.
 
+Confirm that **Eye Surgery** contains **All Surgeries**, **Schedule Surgery**, and **IOL Calculator**, and that a doctor can schedule a procedure and calculate an IOL power from biometry data.
+
+Confirm that **Ocular Imaging** contains **OCT Scans**, **Fundus Photos**, and **Topography**, and that a doctor can create, review, filter, and delete each imaging record type.
+
+Migration 131 installs the client-presentation dataset for `ajay@gmail.com`: 8 eye examinations, 4 glaucoma patients with 12 IOP readings, 5 DR screenings spanning every severity, 6 surgeries spanning every status, and 4 records for each ocular imaging modality. The seed uses stable `DEMO-*` record numbers and is safe from duplicate insertion.
+
 ## 8. Required writable directories
 
 Laragon on Windows normally handles these permissions automatically. If the application cannot write logs, cache, uploaded files, or sessions, make sure the current Windows user has Modify permission on:
@@ -248,6 +254,10 @@ The Glaucoma Center tables were not migrated. Repeat step 6 and confirm that `gl
 ### HTTP 500 on `/admin/drscreening`
 
 The DR Screening table was not migrated. Repeat step 6 and confirm that `dr_screenings` exists in the `smart_hospital` database.
+
+The Eye Surgery table was not migrated. Repeat step 6 and confirm that `eye_surgeries` exists in the `smart_hospital` database.
+
+The Ocular Imaging table was not migrated. Repeat step 6 and confirm that `ocular_imaging` exists in the `smart_hospital` database.
 
 ### `connection failed: Unknown database 'smart_hospital'`
 

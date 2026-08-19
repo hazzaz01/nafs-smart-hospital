@@ -50,6 +50,28 @@
                         <li class="<?php echo set_Submenu('admin/drscreening/ai_analysis'); ?>"><a href="<?php echo site_url('admin/drscreening/ai_analysis'); ?>"><i class="fa fa-magic"></i> AI Analysis</a></li>
                     </ul>
                 </li>
+                <li class="treeview <?php echo set_Topmenu('Eye_Surgery'); ?>">
+                    <a href="#">
+                        <i class="fa fa-medkit"></i> <span>Eye Surgery</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="<?php echo site_url('admin/eyesurgery'); ?>"><i class="fa fa-circle-o"></i> All Surgeries</a></li>
+                        <li><a href="<?php echo site_url('admin/eyesurgery/create'); ?>"><i class="fa fa-plus-circle"></i> Schedule Surgery</a></li>
+                        <li class="<?php echo set_Submenu('admin/eyesurgery/iol_calculator'); ?>"><a href="<?php echo site_url('admin/eyesurgery/iol_calculator'); ?>"><i class="fa fa-calculator"></i> IOL Calculator</a></li>
+                    </ul>
+                </li>
+                <li class="treeview <?php echo set_Topmenu('Ocular_Imaging'); ?>">
+                    <a href="#">
+                        <i class="fa fa-camera"></i> <span>Ocular Imaging</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="<?php echo site_url('admin/ocularimaging/oct'); ?>"><i class="fa fa-circle-o"></i> OCT Scans</a></li>
+                        <li><a href="<?php echo site_url('admin/ocularimaging/fundus'); ?>"><i class="fa fa-circle-o"></i> Fundus Photos</a></li>
+                        <li><a href="<?php echo site_url('admin/ocularimaging/topography'); ?>"><i class="fa fa-circle-o"></i> Topography</a></li>
+                    </ul>
+                </li>
             <?php } ?>
 
            <?php
