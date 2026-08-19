@@ -28,6 +28,17 @@
                         <i class="fa fa-eye"></i> <span>Eye Examinations</span>
                     </a>
                 </li>
+                <li class="treeview <?php echo set_Topmenu('Glaucoma_Center'); ?>">
+                    <a href="#">
+                        <i class="fa fa-heartbeat"></i> <span>Glaucoma Center</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="<?php echo site_url('admin/glaucoma'); ?>"><i class="fa fa-circle-o"></i> All Patients</a></li>
+                        <li><a href="<?php echo site_url('admin/glaucoma/create'); ?>"><i class="fa fa-circle-o"></i> New Patient</a></li>
+                        <li class="<?php echo set_Submenu('admin/glaucoma/iop'); ?>"><a href="<?php echo site_url('admin/glaucoma/iop'); ?>"><i class="fa fa-line-chart"></i> IOP Tracking</a></li>
+                    </ul>
+                </li>
             <?php } ?>
 
            <?php
