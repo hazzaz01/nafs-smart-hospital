@@ -74,6 +74,46 @@ if ($this->customlib->getRTL() == "yes") {
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/0.8.2/css/flag-icon.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>/backend/dist/css/bootstrap-select.min.css">
         <link rel="stylesheet" href="<?php echo base_url(); ?>backend/dist/css/clinical-dashboard.css">
+        <style>
+            /* Compact dashboard header treatment. Existing controls and routes remain unchanged. */
+            @media (min-width: 768px) {
+                .clinical-shell .main-header { height: 64px; box-shadow: 0 1px 4px rgba(20, 44, 72, .12); }
+                .clinical-shell .main-header > .logo { display: flex; align-items: center; width: 270px; height: 64px; padding: 0 16px; color: #102b4d !important; background: #fff !important; border-right: 1px solid #e1e8ef; }
+                .clinical-shell .main-header > .logo:hover { background: #fbfdfd !important; }
+                .clinical-shell .main-header > .logo .logo-lg { display: flex; align-items: center; min-width: 0; width: 100%; line-height: normal; text-align: left; }
+                .clinical-shell .main-header > .logo .logo-lg img { width: 38px; max-height: 42px; margin-right: 11px; object-fit: contain; }
+                .clinical-shell .main-header > .logo .logo-lg strong { overflow: hidden; color: #102b4d; font-size: 16px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+                .clinical-shell .main-header > .navbar { min-height: 64px; margin-left: 270px; background: #fff; border-bottom: 1px solid #e1e8ef; }
+                .clinical-shell.fixed .content-wrapper, .clinical-shell.fixed .right-side { padding-top: 64px; }
+                .clinical-shell .main-sidebar, .clinical-shell .left-side { padding-top: 64px; }
+                .clinical-shell .main-header .sidebar-toggle { position: relative; min-height: 0; width: 42px; height: 42px; margin: 11px 14px 11px 20px; padding: 0; border-radius: 50%; color: #fff !important; background: #08aaa4; box-shadow: 0 2px 6px rgba(0, 159, 153, .25); line-height: 42px; text-align: center; }
+                .clinical-shell .main-header .sidebar-toggle:hover, .clinical-shell .main-header .sidebar-toggle:focus { color: #fff; background: #008f8a; }
+                .clinical-shell .main-header > .navbar > .col-lg-4 { width: auto; height: 64px; padding: 0; }
+                .clinical-shell .main-header .sidebar-session { display: flex; align-items: center; height: 64px; margin: 0; color: #102b4d; font-size: 19px; }
+                .clinical-shell .main-header .sidebar-session i { width: 33px; height: 33px; margin-right: 12px; border-radius: 5px; color: #fff; background: #08aaa4; font-size: 15px; line-height: 33px; text-align: center; box-shadow: 0 2px 5px rgba(0, 159, 153, .2); }
+                .clinical-shell .main-header > .navbar > .col-lg-8 { width: auto; height: 64px; padding: 0 20px 0 12px; overflow: visible; }
+                .clinical-shell .main-header > .navbar > .col-lg-8 > .pull-right { display: flex; align-items: center; float: none !important; height: 64px; }
+                .clinical-shell .main-header .navbar-form.search-form { width: 326px; margin: 0 15px 0 auto; border: 0; }
+                .clinical-shell .main-header .navbar-form.search-form .input-group { width: 100%; padding-top: 0 !important; }
+                .clinical-shell .main-header input.form-control.search-form.search-form3 { height: 50px; border: 1px solid #d5e0e8 !important; border-right: 0 !important; border-radius: 4px 0 0 4px !important; color: #42607c; background: #fafcfd; box-shadow: inset 0 1px 2px rgba(32, 57, 83, .05); font-size: 16px; }
+                .clinical-shell .main-header #search-btn { height: 50px; padding: 0 17px !important; border: 1px solid #d5e0e8 !important; border-left: 0 !important; border-radius: 0 4px 4px 0 !important; color: #08aaa4; background: #fafcfd !important; font-size: 16px; }
+                .clinical-shell .main-header .navbar-custom-menu { display: flex; align-items: center; float: none; }
+                .clinical-shell .main-header .langdiv { margin-right: 10px; }
+                .clinical-shell .main-header .headertopmenu { display: flex; align-items: center; height: 50px; margin: 0; border: 1px solid #d5e0e8; border-radius: 4px; }
+                .clinical-shell .main-header .headertopmenu > li { height: 48px; }
+                .clinical-shell .main-header .headertopmenu > li > a { position: relative; display: flex; align-items: center; justify-content: center; min-width: 48px; height: 48px; padding: 0 12px !important; color: #60748d !important; background: transparent !important; font-size: 17px; }
+                .clinical-shell .main-header .headertopmenu > li > a:hover, .clinical-shell .main-header .headertopmenu > li.open > a { color: #008f8a !important; background: #f1fbfa !important; }
+                .clinical-shell .main-header .headertopmenu > li > a .label, .clinical-shell .main-header .todo-indicator { top: 3px; right: 4px; border-radius: 12px; color: #fff; background: #c52442 !important; }
+                .clinical-shell .main-header .user-menu { display: flex; align-items: center; height: 64px; margin-left: 14px; padding-left: 14px; border-left: 1px solid #dce5ec; }
+                .clinical-shell .main-header .user-menu > a { display: flex; align-items: center; height: 52px; padding: 0 !important; color: #102b4d !important; background: transparent !important; }
+                .clinical-shell .main-header .user-menu .topuser-image { width: 40px; height: 40px; margin: 0 11px 0 0; border: 2px solid #08aaa4; border-radius: 50%; object-fit: cover; }
+                .clinical-shell .header-user-label { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; }
+                .clinical-shell .header-user-label strong { color: #1c2f49; font-size: 15px; font-weight: 700; }
+                .clinical-shell .header-user-label small { margin-top: 4px; color: #718198; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
+                .clinical-shell .user-menu > a:after { margin-left: 12px; color: #718198; font-family: FontAwesome; content: '\\f107'; }
+            }
+            @media (max-width: 1100px) { .clinical-shell .header-user-label { display: none; } .clinical-shell .main-header .navbar-form.search-form { width: 250px; } }
+        </style>
     </head>
     <script type="text/javascript">
         var baseurl = "<?php echo base_url(); ?>";
@@ -133,7 +173,7 @@ if (!empty($logoresult["mini_logo"])) {
             <header class="main-header" id="alert">
                 <a href="<?php echo base_url(); ?>admin/admin/dashboard" class="logo">
                     <span class="logo-mini"><img width="31" height="19" src="<?php echo $this->media_storage->getImageURL($mini_logo); ?>" alt="<?php echo $this->customlib->getAppName() ?>" /></span>
-                    <span class="logo-lg"><img src="<?php echo base_url(); ?>uploads/hospital_content/logo/0mini_logo.png" onerror="this.style.display='none'" alt=""><strong><?php echo html_escape($this->customlib->getAppName()); ?></strong></span>
+                    <span class="logo-lg"><img src="<?php echo $this->media_storage->getImageURL($logo_image); ?>" alt="<?php echo html_escape($this->customlib->getAppName()); ?>"><strong><?php echo html_escape($this->customlib->getAppName()); ?></strong></span>
                 </a>
                 <nav class="navbar navbar-static-top" role="navigation">
                     <a href="#"  onclick="collapseSidebar()"  class="sidebar-toggle" data-toggle="offcanvas" role="button">
@@ -279,6 +319,7 @@ if (!empty($image)) {
                                     <li class="dropdown user-menu">
                                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
                                             <img src="<?php echo $this->media_storage->getImageURL($file); ?>" class="topuser-image" alt="User Image">
+                                            <span class="header-user-label"><strong><?php echo html_escape($this->customlib->getAdminSessionUserName()); ?></strong><small><?php echo html_escape($role); ?></small></span>
                                         </a>
                                         <ul class="dropdown-menu dropdown-user menuboxshadow">
                                             <li>
