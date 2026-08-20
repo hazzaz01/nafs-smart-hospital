@@ -84,6 +84,12 @@ $currency_symbol = $this->customlib->getHospitalCurrencyFormat();
                             <th width="25%"><?php echo $this->lang->line("known_allergies"); ?></th>
                             <td><?php echo $result->known_allergies ?></td>    
                         </tr>
+                        <?php if (!empty($result->diagnosis)) { ?>
+                        <tr>
+                            <th><?php echo $this->lang->line('diagnosis'); ?></th>
+                            <td colspan="3"><?php echo html_escape($result->diagnosis); ?></td>
+                        </tr>
+                        <?php } ?>
                          <?php if($result->attachment!="" && $print != 'yes'){ ?>
                         <tr >        
                             <th><?php echo $this->lang->line('document'); ?></th><td><a href="<?php echo site_url('patient/prescription/downloadprescription/'.$result->prescription_id);  ?>" class='btn btn-default btn-xs' title="<?php echo $this->lang->line('download');?>"><i class='fa fa-download'></i></a></td>                            

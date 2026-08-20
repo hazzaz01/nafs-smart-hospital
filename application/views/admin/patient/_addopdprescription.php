@@ -47,7 +47,20 @@
                                         </td>
                                         <td>  <label><?php echo $this->lang->line('finding_print'); ?> </label><br/><input type="checkbox" name="finding_print" rows="15" value="yes" checked></td>
                                     </tr>
-                                 <tr id="trid"></tr>
+                                    <tr id="trid"></tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <div class="form-group mb0">
+                                                <label><?php echo $this->lang->line('diagnosis'); ?></label>
+                                                <select class="form-control select2" name="diagnosis" style="width: 100%">
+                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                    <?php foreach ((array) $diagnosis_options as $diagnosis_option) { ?>
+                                                        <option value="<?php echo html_escape($diagnosis_option); ?>"><?php echo html_escape($diagnosis_option); ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 </table>
                                 </div>
                               

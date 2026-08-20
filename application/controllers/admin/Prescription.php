@@ -168,6 +168,8 @@ class Prescription extends Admin_Controller
         $radiology                 = $this->radio_model->getRadiology();
         $data['radiology']         = $radiology;
         $data['ipd_id']            = $ipd_id;
+        $patient_record            = $this->patient_model->get_patientidbyIpdId($ipd_id);
+        $data['diagnosis_options'] = $this->prescription_model->getPatientDiagnosisOptions($patient_record['patient_id']);
         $findingresult             = $this->finding_model->getfindingcategory();
         $data['findingresult']     = $findingresult;
         $data['priscribe_list']    = $this->patient_model->getDoctorsipd($ipd_id);
@@ -183,6 +185,8 @@ class Prescription extends Admin_Controller
     public function addopdPrescription()
     {
         $data['visit_details_id'] = $this->input->post('visit_detail_id');
+        $patient_record           = $this->patient_model->get_patientidbyvisitid($data['visit_details_id']);
+        $data['diagnosis_options'] = $this->prescription_model->getPatientDiagnosisOptions($patient_record['patient_id']);
         $data['medicineCategory'] = $this->medicine_category_model->getMedicineCategory();
         $data['intervaldosage']   = $this->medicine_dosage_model->getIntervalDosage();
         $data['durationdosage']   = $this->medicine_dosage_model->getDurationDosage();
@@ -216,6 +220,7 @@ class Prescription extends Admin_Controller
         $radiology                = $this->radio_model->getRadiology();
         $data['radiology']        = $radiology;
         $data["result"]           = $result;
+        $data['diagnosis_options'] = $this->prescription_model->getPatientDiagnosisOptions($result->patient_id, $result->diagnosis);
         $data["prescription_id"]  = $prescription_id;
         $findingresult            = $this->finding_model->getfindingcategory();
         $data['findingresult']    = $findingresult;
@@ -250,6 +255,7 @@ class Prescription extends Admin_Controller
         $radiology                = $this->radio_model->getRadiology();
         $data['radiology']        = $radiology;
         $data["result"]           = $result;
+        $data['diagnosis_options'] = $this->prescription_model->getPatientDiagnosisOptions($result->patient_id, $result->diagnosis);
         $data["prescription_id"]  = $prescription_id;
         $findingresult            = $this->finding_model->getfindingcategory();
         $data['findingresult']    = $findingresult;

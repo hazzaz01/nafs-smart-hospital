@@ -88,6 +88,12 @@ $currency_symbol = $this->customlib->getHospitalCurrencyFormat();
                             <th><?php echo $this->lang->line("prescribe_by"); ?></th>
                             <td><?php echo composeStaffNameByString($result->priscribe_by_name,$result->priscribe_by_surname,$result->priscribe_by_employee_id); ?></td>
                         </tr>
+                        <?php if (!empty($result->diagnosis)) { ?>
+                        <tr>
+                            <th><?php echo $this->lang->line('diagnosis'); ?></th>
+                            <td colspan="3"><?php echo html_escape($result->diagnosis); ?></td>
+                        </tr>
+                        <?php } ?>
                     </table>
                     <div class="divider mt-10 mb-10"></div>
                     <?php if($result->is_finding_print=='yes'){ $colspan = 6 ; $width = '50%'; }else{ $colspan = 12; $width = '100%';

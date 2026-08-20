@@ -72,6 +72,12 @@ $currency_symbol = $this->customlib->getHospitalCurrencyFormat();
                             <th style="padding-left: 0;"><?php echo $this->lang->line("generated_by"); ?></th>
                             <td><?php echo composeStaffNameByString($result->staff_name,$result->staff_surname,$result->staff_employee_id); ?></td>
                             </tr>
+                        <?php if (!empty($result->diagnosis)) { ?>
+                        <tr>
+                            <th style="padding-left: 0;"><?php echo $this->lang->line('diagnosis'); ?></th>
+                            <td colspan="3"><?php echo html_escape($result->diagnosis); ?></td>
+                        </tr>
+                        <?php } ?>
                          <?php 
                         if (!empty($fields_prescription)) {
                             $display_field = '';

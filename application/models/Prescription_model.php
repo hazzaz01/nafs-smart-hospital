@@ -6,6 +6,33 @@ if (!defined('BASEPATH')) {
 
 class Prescription_model extends MY_Model
 {
+    public function getPatientDiagnosisOptions($patient_id, $selected_diagnosis = '')
+    {
+        $diagnoses = array();
+
+        if (!empty($patient_id) && $this->db->table_exists('diagnosis')) {
+            $rows = $this->db->select('description')
+                ->where('patient_id', $patient_id)
+                ->where('description IS NOT NULL', null, false)
+                ->where("TRIM(description) != ''", null, false)
+                ->group_by('description')
+                ->order_by('description', 'asc')
+                ->get('diagnosis')
+                ->result_array();
+
+            foreach ($rows as $row) {
+                $diagnoses[] = trim($row['description']);
+            }
+        }
+
+        $selected_diagnosis = trim((string) $selected_diagnosis);
+        if ($selected_diagnosis !== '' && !in_array($selected_diagnosis, $diagnoses, true)) {
+            $diagnoses[] = $selected_diagnosis;
+        }
+
+        return $diagnoses;
+    }
+
     public function getPatientPrescription($id)
     {
         $query = $this->db->select("opd_prescription_basic.*,opd_details.symptoms,opd_details.appointment_date,opd_details.refference,opd_details.cons_doctor,opd_details.id as opd_id")->join("visit_details", "visit_details.id=opd_prescription_basic.visit_details_id")->join("opd_details", "visit_details.opd_details_id = opd_details.id")->where("opd_details.patient_id", $id)->get("opd_prescription_basic");
@@ -467,7 +494,7 @@ class Prescription_model extends MY_Model
         $field_variable = (empty($field_var_array))? "": ",".implode(',', $field_var_array);
         $custom_field_column = (empty($custom_field_column_array))? "": ",".implode(',', $custom_field_column_array);
         if ($table_type == "ipd_prescription") {
-            $query = $this->db->select("ipd_details.*,blood_bank_products.name as blood_group_name,patients.*,staff_generated.name as staff_name,staff_generated.surname as staff_surname,staff_generated.employee_id as staff_employee_id,staff.name,staff.surname,staff.employee_id,staff.local_address,ipd_prescription_basic.ipd_id,ipd_prescription_basic.id as prescription_id,ipd_prescription_basic.attachment,ipd_prescription_basic.date as presdate,ipd_prescription_basic.header_note,ipd_prescription_basic.footer_note,ipd_prescription_basic.finding_description,ipd_prescription_basic.is_finding_print,staff.id as staff_id,staff_priscribe_by.name as priscribe_by_name,staff_priscribe_by.surname as priscribe_by_surname,staff_priscribe_by.employee_id as priscribe_by_employee_id,ipd_prescription_basic.prescribe_by ". $field_variable)->join("ipd_details", "ipd_prescription_basic.ipd_id = ipd_details.id");
+            $query = $this->db->select("ipd_details.*,blood_bank_products.name as blood_group_name,patients.*,staff_generated.name as staff_name,staff_generated.surname as staff_surname,staff_generated.employee_id as staff_employee_id,staff.name,staff.surname,staff.employee_id,staff.local_address,ipd_prescription_basic.ipd_id,ipd_prescription_basic.id as prescription_id,ipd_prescription_basic.attachment,ipd_prescription_basic.date as presdate,ipd_prescription_basic.header_note,ipd_prescription_basic.footer_note,ipd_prescription_basic.finding_description,ipd_prescription_basic.diagnosis,ipd_prescription_basic.is_finding_print,staff.id as staff_id,staff_priscribe_by.name as priscribe_by_name,staff_priscribe_by.surname as priscribe_by_surname,staff_priscribe_by.employee_id as priscribe_by_employee_id,ipd_prescription_basic.prescribe_by ". $field_variable)->join("ipd_details", "ipd_prescription_basic.ipd_id = ipd_details.id");
             $this->db->join("patients", "patients.id = ipd_details.patient_id");
             $this->db->join('blood_bank_products', 'blood_bank_products.id = patients.blood_bank_product_id',"left");
             $this->db->join("staff", "staff.id = ipd_details.cons_doctor","left");
@@ -483,7 +510,7 @@ class Prescription_model extends MY_Model
                 return $result;
             } 
         } elseif ($table_type == "opd_prescription") {
-            $query = $this->db->select("opd_details.*,patients.*,staff.name,staff.surname,staff.local_address,ipd_prescription_basic.ipd_id,ipd_prescription_basic.id as prescription_id,ipd_prescription_basic.attachment,ipd_prescription_basic.date as presdate,ipd_prescription_basic.header_note,ipd_prescription_basic.footer_note,ipd_prescription_basic.finding_description,ipd_prescription_basic.is_finding_print,visit_details.id as visit_details_id ". $field_variable);
+            $query = $this->db->select("opd_details.*,patients.*,staff.name,staff.surname,staff.local_address,ipd_prescription_basic.ipd_id,ipd_prescription_basic.id as prescription_id,ipd_prescription_basic.attachment,ipd_prescription_basic.date as presdate,ipd_prescription_basic.header_note,ipd_prescription_basic.footer_note,ipd_prescription_basic.finding_description,ipd_prescription_basic.diagnosis,ipd_prescription_basic.is_finding_print,visit_details.id as visit_details_id ". $field_variable);
             $this->db->join("visit_details", "visit_details.id = ipd_prescription_basic.visit_details_id");
             $this->db->join("opd_details", "opd_details.id = visit_details.opd_details_id");
             $this->db->join("patients", "patients.id = opd_details.patient_id");
@@ -635,7 +662,7 @@ class Prescription_model extends MY_Model
         $field_variable = (empty($field_var_array))? "": ",".implode(',', $field_var_array);
         $custom_field_column = (empty($custom_field_column_array))? "": ",".implode(',', $custom_field_column_array);
 
-        $query = $this->db->select("opd_details.*,visit_details.id as visitid,visit_details.known_allergies as any_allergies,visit_details.weight,visit_details.height,visit_details.pulse,visit_details.temperature,visit_details.symptoms,visit_details.bp,patients.*,blood_bank_products.name as blood_group_name,staff.name,staff.surname,staff.employee_id,staff.local_address,ipd_prescription_basic.ipd_id,ipd_prescription_basic.id as prescription_id,ipd_prescription_basic.date as presdate,ipd_prescription_basic.header_note,ipd_prescription_basic.footer_note,ipd_prescription_basic.finding_description,ipd_prescription_basic.attachment,ipd_prescription_basic.is_finding_print,prescription_generate.name as generated_by_name,prescription_generate.surname as generated_by_surname,prescription_generate.employee_id as generated_by_employee_id,prescribe_by.name as prescribe_by_name,prescribe_by.surname as prescribe_by_surname,prescribe_by.employee_id as prescribe_by_employee_id, opd_details.id as opd_detail_id,staff.employee_id as doctor_id ". $field_variable);
+        $query = $this->db->select("opd_details.*,visit_details.id as visitid,visit_details.known_allergies as any_allergies,visit_details.weight,visit_details.height,visit_details.pulse,visit_details.temperature,visit_details.symptoms,visit_details.bp,patients.*,blood_bank_products.name as blood_group_name,staff.name,staff.surname,staff.employee_id,staff.local_address,ipd_prescription_basic.ipd_id,ipd_prescription_basic.id as prescription_id,ipd_prescription_basic.date as presdate,ipd_prescription_basic.header_note,ipd_prescription_basic.footer_note,ipd_prescription_basic.finding_description,ipd_prescription_basic.diagnosis,ipd_prescription_basic.attachment,ipd_prescription_basic.is_finding_print,prescription_generate.name as generated_by_name,prescription_generate.surname as generated_by_surname,prescription_generate.employee_id as generated_by_employee_id,prescribe_by.name as prescribe_by_name,prescribe_by.surname as prescribe_by_surname,prescribe_by.employee_id as prescribe_by_employee_id, opd_details.id as opd_detail_id,staff.employee_id as doctor_id ". $field_variable);
         $this->db->join("visit_details", "visit_details.id = ipd_prescription_basic.visit_details_id","left");
         $this->db->join("opd_details", "opd_details.id = visit_details.opd_details_id");
         $this->db->join("patients", "patients.id = opd_details.patient_id");

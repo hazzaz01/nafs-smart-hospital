@@ -76,10 +76,16 @@ $currency_symbol = $this->customlib->getHospitalCurrencyFormat();
                             <th><?php echo $this->lang->line('consultant_doctor'); ?></th>
                             <td><?php echo $result->name . " " . $result->surname ?> (<?php echo $result->doctor_id ?>)</td>
                         </tr>
-                        <tr>        
+                        <tr>
                             <th style="padding-left: 0;"><?php echo $this->lang->line('prescribe_by'); ?></th><td><?php echo $result->prescribe_by_name . " " . $result->prescribe_by_surname ?> (<?php echo $result->prescribe_by_employee_id ?>)</td>                            
                             <th><?php echo $this->lang->line('generated_by'); ?></th><td><?php echo $result->generated_by_name . " " . $result->generated_by_surname ?> (<?php echo $result->generated_by_employee_id ?>)</td>
                         </tr>
+                        <?php if (!empty($result->diagnosis)) { ?>
+                        <tr>
+                            <th style="padding-left: 0;"><?php echo $this->lang->line('diagnosis'); ?></th>
+                            <td colspan="3"><?php echo html_escape($result->diagnosis); ?></td>
+                        </tr>
+                        <?php } ?>
                          <?php 
                                                              
                         if (!empty($fields_prescription)) {
