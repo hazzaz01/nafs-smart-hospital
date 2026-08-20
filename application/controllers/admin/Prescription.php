@@ -37,6 +37,7 @@ class Prescription extends Admin_Controller
         $data["id"]     = $visitid;
         $data["opd_id"] = $result->opd_detail_id;
         $data['fields_prescription']   =  $this->customfield_model->get_custom_fields('prescription', '',1);
+        $data['optical_prescription'] = $this->optical_prescription_model->getByPrescriptionId($result->prescription_id);
         $page           = $this->load->view('admin/patient/_printprescription', $data, true);
         echo json_encode(array('status' => 1, 'page' => $page));
     }
@@ -48,6 +49,7 @@ class Prescription extends Admin_Controller
         $data["print_details"] = $this->printing_model->getheaderfooter('opdpre');
         $data["id"]            = $visitid;
         $data["opd_id"]        = $result->opd_detail_id;
+        $data['optical_prescription'] = $this->optical_prescription_model->getByPrescriptionId($result->prescription_id);
         
         if (isset($_POST['print'])) {
             $data["print"] = 'yes';
@@ -88,6 +90,7 @@ class Prescription extends Admin_Controller
 
         $data["print_details"] = $this->printing_model->getheaderfooter('ipdpres');
         $data["result"]        = $result;
+        $data['optical_prescription'] = $this->optical_prescription_model->getByPrescriptionId($result->prescription_id);
 
         if (isset($_POST['print'])) {
             $data["print"] = 'yes';
@@ -109,6 +112,7 @@ class Prescription extends Admin_Controller
 
         $data["print_details"] = $this->printing_model->getheaderfooter('ipdpres');
         $data["result"]        = $result;
+        $data['optical_prescription'] = $this->optical_prescription_model->getByPrescriptionId($result->prescription_id);
 
         if (isset($_POST['print'])) {
             $data["print"] = 'yes';

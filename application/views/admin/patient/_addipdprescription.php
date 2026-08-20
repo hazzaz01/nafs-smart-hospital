@@ -110,6 +110,9 @@
                                             <div>
                                                 <select class="form-control select2 medicine_dosage" style="width: 100%" name="dosage_1">
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                            <?php foreach ($dosage as $dosage_value) { ?>
+                                                <option value="<?php echo $dosage_value['id']; ?>"><?php echo html_escape($dosage_value['dosage'] . ' (' . $dosage_value['unit'] . ')'); ?></option>
+                                            <?php } ?>
                                                 </select>
                                             </div> 
                                         </div>

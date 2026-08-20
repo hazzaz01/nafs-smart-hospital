@@ -115,6 +115,7 @@ $currency_symbol = $this->customlib->getHospitalCurrencyFormat();
                     </table>
                     <div class="divider mb-10 mt-10"></div>
                     <?php } ?>
+                    <?php $this->load->view('admin/patient/_print_optical_prescription', array('optical_prescription' => isset($optical_prescription) ? $optical_prescription : array())); ?>
 
 
                     <?php if($result->medicines){ ?>
@@ -233,4 +234,4 @@ if (!empty($print_details['print_footer'])) { ?>
 </div>
 <?php
 }
-?>    
+?>
