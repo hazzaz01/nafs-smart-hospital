@@ -201,13 +201,18 @@ $floor_list    = $this->floor_model->floor_list();
 $bedlist       = $this->bed_model->bed_list();
 $bedgroup_list = $this->bedgroup_model->bedGroupFloor();
 ?>
-<div id="bed" class="modal fade bedmodal" role="dialog">
+<div id="bed" class="modal fade bedmodal clinical-bed-modal" role="dialog" aria-labelledby="bedStatusModalLabel">
     <div class="modal-dialog modal100per">
-        <!-- Modal content-->
         <div class="modal-content fullshadow">
-            <button type="button" class="ukclose" data-dismiss="modal">&times;</button>
-            <div class="modal-body">
-                <div id="ajaxbedstatus"></div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="bedStatusModalLabel">Bed Status</h4>
+            </div>
+            <div class="pup-scroll-area">
+                <div id="ajaxbedstatus" class="modal-body"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
