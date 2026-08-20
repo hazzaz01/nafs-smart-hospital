@@ -18,7 +18,14 @@ class Prescription extends Admin_Controller
         $this->load->model('prefix_model');
         $this->opd_prefix = $this->prefix_model->getByCategory(array('opd_no'))[0]->prefix;
         $this->load->model('finding_model');
+        $this->load->model('optical_prescription_model');
         $this->load->helper('customfield_helper');
+    }
+
+    private function isOpticalPrescriptionDoctor()
+    {
+        $role = json_decode($this->customlib->getStaffRole(), true);
+        return isset($role['name']) && strtoupper($role['name']) === 'DOCTOR';
     }
 
     public function printPrescription()
@@ -162,6 +169,8 @@ class Prescription extends Admin_Controller
         $data['priscribe_list']    = $this->patient_model->getDoctorsipd($ipd_id);
         $consultant_doctor         = $this->patient_model->get_patientidbyIpdId($ipd_id);
         $data['consultant_doctor'] = $consultant_doctor;
+        $data['is_optical_prescription_doctor'] = $this->isOpticalPrescriptionDoctor();
+        $data['optical_prescription'] = array();
         
         $page = $this->load->view('admin/patient/_addipdprescription', $data, true);
         echo json_encode(array('status' => 1, 'page' => $page));
@@ -182,6 +191,8 @@ class Prescription extends Admin_Controller
         $data['radiology']        = $radiology;
         $findingresult            = $this->finding_model->getfindingcategory();
         $data['findingtype']      = $findingresult;
+        $data['is_optical_prescription_doctor'] = $this->isOpticalPrescriptionDoctor();
+        $data['optical_prescription'] = array();
         $page                     = $this->load->view('admin/patient/_addopdprescription', $data, true); 
         echo json_encode(array('status' => 1, 'page' => $page));
     }
@@ -212,6 +223,8 @@ class Prescription extends Admin_Controller
             $consultant_doctorarray[] = array('id' => $value['consult_doctor'], 'name' => $value['ipd_doctorname'] . " " . $value['ipd_doctorsurname'] . "(" . $value['employee_id'] . ")");
         }
         $data['priscribe_list'] = $consultant_doctorarray;
+        $data['is_optical_prescription_doctor'] = $this->isOpticalPrescriptionDoctor();
+        $data['optical_prescription'] = $data['is_optical_prescription_doctor'] ? $this->optical_prescription_model->getByPrescriptionId($prescription_id) : array();
  
         $page = $this->load->view('admin/patient/_editipdprescription', $data, true);
         echo json_encode(array('status' => 1, 'page' => $page));
@@ -236,6 +249,8 @@ class Prescription extends Admin_Controller
         $data["prescription_id"]  = $prescription_id;
         $findingresult            = $this->finding_model->getfindingcategory();
         $data['findingresult']    = $findingresult;
+        $data['is_optical_prescription_doctor'] = $this->isOpticalPrescriptionDoctor();
+        $data['optical_prescription'] = $data['is_optical_prescription_doctor'] ? $this->optical_prescription_model->getByPrescriptionId($prescription_id) : array();
 
         $page = $this->load->view('admin/patient/_editopdprescription', $data, true);
         echo json_encode(array('status' => 1, 'page' => $page));

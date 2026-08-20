@@ -27,7 +27,7 @@ class patient extends Admin_Controller
         $this->yesno_condition = $this->config->item('yesno_condition');
         $this->search_type     = $this->config->item('search_type');
         $this->blood_group     = $this->config->item('bloodgroup');
-        $this->load->model(array('conference_model', 'transaction_model', 'casereference_model', 'patient_model', 'notificationsetting_model','antenatal_model','vital_model'));
+        $this->load->model(array('conference_model', 'transaction_model', 'casereference_model', 'patient_model', 'notificationsetting_model','antenatal_model','vital_model', 'optical_prescription_model'));
         $this->load->model('finding_model');
         $this->charge_type          = $this->customlib->getChargeMaster();
         $data["charge_type"]        = $this->charge_type;
@@ -4515,6 +4515,51 @@ This Function is used to Import Multiple Patient Records
         echo json_encode($array);
     }
 
+    private function isOpticalPrescriptionDoctor()
+    {
+        $role = json_decode($this->customlib->getStaffRole(), true);
+        return isset($role['name']) && strtoupper($role['name']) === 'DOCTOR';
+    }
+
+    private function saveOpticalPrescription($prescription_id, $patient_id = null, $visit_details_id = null, $ipd_id = null, $doctor_id = null)
+    {
+        if (!$this->isOpticalPrescriptionDoctor() || $this->input->post('optical_prescription_enabled') !== '1') {
+            return;
+        }
+
+        $type = $this->input->post('optical_prescription_type');
+        $allowed_types = array('spectacles', 'contact_lens', 'both');
+        if (!in_array($type, $allowed_types, true)) {
+            $type = 'spectacles';
+        }
+
+        $data = array(
+            'patient_id'        => $patient_id ? (int) $patient_id : null,
+            'visit_details_id'  => $visit_details_id ? (int) $visit_details_id : null,
+            'ipd_id'            => $ipd_id ? (int) $ipd_id : null,
+            'doctor_id'         => $doctor_id ? (int) $doctor_id : $this->customlib->getStaffID(),
+            'prescription_type' => $type,
+            'lens_type'         => trim((string) $this->input->post('optical_lens_type')),
+            'lens_material'     => trim((string) $this->input->post('optical_lens_material')),
+            'frame_type'        => trim((string) $this->input->post('optical_frame_type')),
+            'contact_lens_brand' => substr(trim((string) $this->input->post('optical_contact_lens_brand')), 0, 100),
+            'contact_lens_base_curve' => substr(trim((string) $this->input->post('optical_contact_lens_base_curve')), 0, 16),
+            'contact_lens_diameter' => substr(trim((string) $this->input->post('optical_contact_lens_diameter')), 0, 16),
+            'contact_lens_replacement' => substr(trim((string) $this->input->post('optical_contact_lens_replacement')), 0, 30),
+            'coatings'          => json_encode(array_values((array) $this->input->post('optical_coatings'))),
+            'validity_months'   => max(1, min(60, (int) $this->input->post('optical_validity_months'))),
+            'notes'             => trim((string) $this->input->post('optical_notes')),
+        );
+
+        foreach (array('od', 'os') as $eye) {
+            foreach (array('sphere', 'cylinder', 'axis', 'add', 'pd', 'prism') as $field) {
+                $data[$eye . '_' . $field] = substr(trim((string) $this->input->post('optical_' . $eye . '_' . $field)), 0, 16);
+            }
+        }
+
+        $this->optical_prescription_model->save($prescription_id, $data);
+    }
+
     public function add_prescription()
     {
         if (!$this->rbac->hasPrivilege('ipd_prescription', 'can_add')) {
@@ -4650,7 +4695,8 @@ This Function is used to Import Multiple Patient Records
             }
         }
 
-        if ($medicine==0 && !isset($pathology) && !isset($radiology)) {
+        $has_optical_prescription = $this->isOpticalPrescriptionDoctor() && $this->input->post('optical_prescription_enabled') === '1';
+        if ($medicine==0 && !isset($pathology) && !isset($radiology) && !$has_optical_prescription) {
             $this->form_validation->set_rules('no_records', $this->lang->line('no_records'), 'trim|required|xss_clean',
                 array('required' => $this->lang->line('please_select_any_one')));
         }
@@ -4824,6 +4870,7 @@ This Function is used to Import Multiple Patient Records
 
             $basic_id       = $this->prescription_model->add_ipdprescription($ipd_basic_array, $insert_medicines, $update_medicines, $_medicines_delete, $insert_pathology, $insert_radiology, $delete_pathology, $delete_radiology, $ipd_prescription_basic_id);
             $patient_record = $this->patient_model->get_patientidbyIpdId($ipd_id);
+            $this->saveOpticalPrescription($basic_id, $patient_record['patient_id'], null, $ipd_id, $this->input->post('prescribe_by'));
 
             if (!empty($custom_value_array)) {
                 $this->customfield_model->insertRecord($custom_value_array, $basic_id);
@@ -4995,7 +5042,8 @@ This Function is used to Import Multiple Patient Records
             }
         }
 
-        if (($medicine==0) && !isset($pathology) && !isset($radiology)) {
+        $has_optical_prescription = $this->isOpticalPrescriptionDoctor() && $this->input->post('optical_prescription_enabled') === '1';
+        if (($medicine==0) && !isset($pathology) && !isset($radiology) && !$has_optical_prescription) {
             $this->form_validation->set_rules('no_records', $this->lang->line("no_records"), 'trim|required|xss_clean',
                 array('required' => $this->lang->line("please_select_any_one")));
         }
@@ -5157,6 +5205,7 @@ This Function is used to Import Multiple Patient Records
             }
             
             $patient_record = $this->patient_model->get_patientidbyvisitid($visitid);
+            $this->saveOpticalPrescription($basic_id, $patient_record['patient_id'], $visitid, null, $opd_details['doctor_id']);
             $opd_id         = $patient_record['opd_details_id'];
             $visible_module = $this->input->post('visible');
 

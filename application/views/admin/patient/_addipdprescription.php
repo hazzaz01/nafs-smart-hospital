@@ -15,6 +15,7 @@
                                 </div> 
                                 <hr/>
                             </div>                               
+                            <?php if (!empty($is_optical_prescription_doctor)) { $this->load->view('admin/patient/_optical_prescription_fields', array('optical_prescription' => $optical_prescription)); } ?>
                             <div class="col-sm-12">
                                <table class="table table-striped table-bordered table-hover" style="width:100%;">
                                     <tr>
@@ -238,4 +239,4 @@
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
