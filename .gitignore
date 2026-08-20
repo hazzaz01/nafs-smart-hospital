@@ -101,3 +101,4 @@ Desktop.ini
 *.7z
 *.sql.gz
 *.sql.zip
+.gstack/

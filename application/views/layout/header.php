@@ -73,12 +73,13 @@ if ($this->customlib->getRTL() == "yes") {
         <link rel="stylesheet" href="<?php echo base_url() ?>backend/plugins/select2/select2.min.css">        
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/0.8.2/css/flag-icon.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>/backend/dist/css/bootstrap-select.min.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>backend/dist/css/clinical-dashboard.css">
     </head>
     <script type="text/javascript">
         var baseurl = "<?php echo base_url(); ?>";
         var chk_validate = "<?php echo $this->config->item('SHLK') ?>";
     </script>
-    <body class="hold-transition skin-blue fixed sidebar-mini">
+    <body class="hold-transition skin-blue fixed sidebar-mini clinical-shell">
         <?php
 if ($this->config->item('SHLK') == "") {
     ?>
@@ -132,7 +133,7 @@ if (!empty($logoresult["mini_logo"])) {
             <header class="main-header" id="alert">
                 <a href="<?php echo base_url(); ?>admin/admin/dashboard" class="logo">
                     <span class="logo-mini"><img width="31" height="19" src="<?php echo $this->media_storage->getImageURL($mini_logo); ?>" alt="<?php echo $this->customlib->getAppName() ?>" /></span>
-                    <span class="logo-lg"><img src="<?php echo $this->media_storage->getImageURL($logo_image); ?>" alt="<?php echo $this->customlib->getAppName() ?>" /></span>
+                    <span class="logo-lg"><img src="<?php echo base_url(); ?>uploads/hospital_content/logo/0mini_logo.png" onerror="this.style.display='none'" alt=""><strong><?php echo html_escape($this->customlib->getAppName()); ?></strong></span>
                 </a>
                 <nav class="navbar navbar-static-top" role="navigation">
                     <a href="#"  onclick="collapseSidebar()"  class="sidebar-toggle" data-toggle="offcanvas" role="button">
@@ -142,8 +143,9 @@ if (!empty($logoresult["mini_logo"])) {
                         <span class="icon-bar"></span>
                     </a>
                     <div class="col-lg-4 col-md-4 col-sm-3 col-xs-3">
-                        <span href="#" class="sidebar-session">
-                            <?php echo $this->setting_model->getCurrentHospitalName(); ?>
+                        <span class="sidebar-session">
+                            <i class="fa fa-home"></i>
+                            <strong><?php echo isset($title) ? html_escape($title) : $this->setting_model->getCurrentHospitalName(); ?></strong>
                         </span>
                     </div>
                     <div class="col-lg-8 col-md-8 col-sm-9 col-xs-9">

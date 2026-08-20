@@ -1,15 +1,9 @@
 <aside class="main-sidebar" id="alert2">
-    <?php if ($this->rbac->hasPrivilege('patient', 'can_view')) {?>
-        <form class="navbar-form navbar-left search-form2" role="search"  action="<?php echo site_url('admin/admin/search'); ?>" method="POST">
-            <?php echo $this->customlib->getCSRF(); ?>
-            <div class="input-group ">
-                <input type="text"  name="search_text" class="form-control search-form" placeholder="<?php echo $this->lang->line('search_by_name'); ?>">
-                <span class="input-group-btn">
-                    <button type="submit" name="search" id="search-btn" style="padding: 3px 12px !important;border-radius: 0px 30px 30px 0px; background: #fff;" class="btn btn-flat"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        </form>
-    <?php }?> 
+    <div class="clinical-menu-filter">
+        <i class="fa fa-search"></i>
+        <input type="text" id="clinicalMenuFilter" autocomplete="off" placeholder="Filter Menu" aria-label="Filter Menu">
+        <button type="button" id="clinicalMenuClear" aria-label="Clear menu filter"><i class="fa fa-times"></i></button>
+    </div>
     <section class="sidebar" id="sibe-box">
         <?php $this->load->view('layout/top_sidemenu');?>
         <ul class="sidebar-menu verttop">
@@ -974,3 +968,59 @@
         </ul>
     </section>
 </aside>
+<script>
+(function () {
+    function bootClinicalMenu() {
+        var menu = document.querySelector('.main-sidebar .sidebar-menu');
+        var input = document.getElementById('clinicalMenuFilter');
+        var clear = document.getElementById('clinicalMenuClear');
+        if (!menu || !input || menu.getAttribute('data-clinical-ready')) return;
+        menu.setAttribute('data-clinical-ready', '1');
+
+        var sections = [
+            ['admin/admin/dashboard', 'Core Operations'],
+            ['admin/pharmacy', 'Clinical'],
+            ['admin/birthordeath', 'Administration'],
+            ['admin/notification', 'Tools & Content'],
+            ['admin/report', 'Reports & Setup']
+        ];
+        sections.forEach(function (section) {
+            var links = menu.querySelectorAll('a[href]');
+            for (var i = 0; i < links.length; i++) {
+                if (links[i].getAttribute('href').indexOf(section[0]) !== -1) {
+                    var li = links[i].closest('li');
+                    if (li && li.parentNode === menu && !li.previousElementSibling?.classList.contains('clinical-nav-label')) {
+                        var label = document.createElement('li');
+                        label.className = 'clinical-nav-label';
+                        label.textContent = section[1];
+                        menu.insertBefore(label, li);
+                    }
+                    break;
+                }
+            }
+        });
+
+        function filterMenu() {
+            var query = input.value.trim().toLowerCase();
+            clear.classList.toggle('show', query.length > 0);
+            Array.prototype.forEach.call(menu.children, function (item) {
+                if (item.classList.contains('clinical-nav-label')) return;
+                item.style.display = !query || item.textContent.toLowerCase().indexOf(query) !== -1 ? '' : 'none';
+            });
+            Array.prototype.forEach.call(menu.querySelectorAll('.clinical-nav-label'), function (label) {
+                var next = label.nextElementSibling;
+                var visible = false;
+                while (next && !next.classList.contains('clinical-nav-label')) {
+                    if (next.style.display !== 'none') visible = true;
+                    next = next.nextElementSibling;
+                }
+                label.style.display = visible ? '' : 'none';
+            });
+        }
+        input.addEventListener('input', filterMenu);
+        clear.addEventListener('click', function () { input.value = ''; filterMenu(); input.focus(); });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootClinicalMenu);
+    else bootClinicalMenu();
+})();
+</script>
