@@ -30,4 +30,9 @@ class Optical_prescription_model extends MY_Model
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
+
+    public function deleteByPrescriptionId($prescription_id)
+    {
+        return $this->db->where('prescription_basic_id', (int) $prescription_id)->delete($this->table);
+    }
 }

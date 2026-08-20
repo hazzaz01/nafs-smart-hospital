@@ -4518,12 +4518,28 @@ This Function is used to Import Multiple Patient Records
     private function isOpticalPrescriptionDoctor()
     {
         $role = json_decode($this->customlib->getStaffRole(), true);
-        return isset($role['name']) && strtoupper($role['name']) === 'DOCTOR';
+        if (!isset($role['name']) || strtoupper($role['name']) !== 'DOCTOR') {
+            return false;
+        }
+
+        foreach ($this->staff_model->getStaffSpeciality((int) $this->customlib->getStaffID()) as $speciality) {
+            $name = strtolower(trim($speciality->specialist_name));
+            if ($name === 'ophthalmologist' || $name === 'ophthalmology') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function saveOpticalPrescription($prescription_id, $patient_id = null, $visit_details_id = null, $ipd_id = null, $doctor_id = null)
     {
-        if (!$this->isOpticalPrescriptionDoctor() || $this->input->post('optical_prescription_enabled') !== '1') {
+        if (!$this->isOpticalPrescriptionDoctor()) {
+            return;
+        }
+
+        if ($this->input->post('optical_prescription_enabled') !== '1') {
+            $this->optical_prescription_model->deleteByPrescriptionId($prescription_id);
             return;
         }
 
@@ -4549,6 +4565,21 @@ This Function is used to Import Multiple Patient Records
             'coatings'          => json_encode(array_values((array) $this->input->post('optical_coatings'))),
             'validity_months'   => max(1, min(60, (int) $this->input->post('optical_validity_months'))),
             'notes'             => trim((string) $this->input->post('optical_notes')),
+            'ophthalmology_data' => json_encode(array(
+                'chief_complaint' => trim((string) $this->input->post('ophthalmology_chief_complaint')),
+                'va_od_unaided' => trim((string) $this->input->post('ophthalmology_va_od_unaided')),
+                'va_od_aided' => trim((string) $this->input->post('ophthalmology_va_od_aided')),
+                'va_os_unaided' => trim((string) $this->input->post('ophthalmology_va_os_unaided')),
+                'va_os_aided' => trim((string) $this->input->post('ophthalmology_va_os_aided')),
+                'iop_od' => trim((string) $this->input->post('ophthalmology_iop_od')),
+                'iop_os' => trim((string) $this->input->post('ophthalmology_iop_os')),
+                'anterior_segment' => trim((string) $this->input->post('ophthalmology_anterior_segment')),
+                'fundus' => trim((string) $this->input->post('ophthalmology_fundus')),
+                'diagnosis' => trim((string) $this->input->post('ophthalmology_diagnosis')),
+                'treatment_plan' => trim((string) $this->input->post('ophthalmology_treatment_plan')),
+                'advice' => trim((string) $this->input->post('ophthalmology_advice')),
+                'follow_up' => trim((string) $this->input->post('ophthalmology_follow_up')),
+            )),
         );
 
         foreach (array('od', 'os') as $eye) {

@@ -25,7 +25,18 @@ class Prescription extends Admin_Controller
     private function isOpticalPrescriptionDoctor()
     {
         $role = json_decode($this->customlib->getStaffRole(), true);
-        return isset($role['name']) && strtoupper($role['name']) === 'DOCTOR';
+        if (!isset($role['name']) || strtoupper($role['name']) !== 'DOCTOR') {
+            return false;
+        }
+
+        foreach ($this->staff_model->getStaffSpeciality((int) $this->customlib->getStaffID()) as $speciality) {
+            $name = strtolower(trim($speciality->specialist_name));
+            if ($name === 'ophthalmologist' || $name === 'ophthalmology') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function printPrescription()
@@ -38,7 +49,8 @@ class Prescription extends Admin_Controller
         $data["opd_id"] = $result->opd_detail_id;
         $data['fields_prescription']   =  $this->customfield_model->get_custom_fields('prescription', '',1);
         $data['optical_prescription'] = $this->optical_prescription_model->getByPrescriptionId($result->prescription_id);
-        $page           = $this->load->view('admin/patient/_printprescription', $data, true);
+        $view           = !empty($data['optical_prescription']['ophthalmology_data']) ? 'admin/patient/_ophthalmology_print' : 'admin/patient/_printprescription';
+        $page           = $this->load->view($view, $data, true);
         echo json_encode(array('status' => 1, 'page' => $page));
     }
 
@@ -58,7 +70,8 @@ class Prescription extends Admin_Controller
             $data["print"] = 'no';
             $data['fields_prescription']   =  $this->customfield_model->get_custom_fields('prescription'); 
         } 
-        $this->load->view("admin/patient/prescription", $data);
+        $view = !empty($data['optical_prescription']['ophthalmology_data']) ? 'admin/patient/_ophthalmology_print' : 'admin/patient/prescription';
+        $this->load->view($view, $data);
     }
 
     public function getPrescriptionmanual($visitid)
@@ -100,7 +113,8 @@ class Prescription extends Admin_Controller
             $data['fields_prescription']   =  $this->customfield_model->get_custom_fields('prescription', 1);
         }
 
-        $page = $this->load->view('admin/patient/ipdprescription', $data, true);
+        $view = !empty($data['optical_prescription']['ophthalmology_data']) ? 'admin/patient/_ophthalmology_print' : 'admin/patient/ipdprescription';
+        $page = $this->load->view($view, $data, true);
         echo json_encode(array('status' => 1, 'page' => $page));
 
     }
@@ -122,7 +136,8 @@ class Prescription extends Admin_Controller
             $data['fields_prescription']   =  $this->customfield_model->get_custom_fields('prescription');
         }
 
-        $page = $this->load->view('admin/patient/_printIpdPrescription', $data, true);
+        $view = !empty($data['optical_prescription']['ophthalmology_data']) ? 'admin/patient/_ophthalmology_print' : 'admin/patient/_printIpdPrescription';
+        $page = $this->load->view($view, $data, true);
         echo json_encode(array('status' => 1, 'page' => $page));
     }
 
@@ -169,6 +184,7 @@ class Prescription extends Admin_Controller
         $data['radiology']         = $radiology;
         $data['ipd_id']            = $ipd_id;
         $patient_record            = $this->patient_model->get_patientidbyIpdId($ipd_id);
+        $data['eye_patient']       = $this->db->where('id', $patient_record['patient_id'])->get('patients')->row_array();
         $data['diagnosis_options'] = $this->prescription_model->getPatientDiagnosisOptions($patient_record['patient_id']);
         $findingresult             = $this->finding_model->getfindingcategory();
         $data['findingresult']     = $findingresult;
@@ -186,6 +202,7 @@ class Prescription extends Admin_Controller
     {
         $data['visit_details_id'] = $this->input->post('visit_detail_id');
         $patient_record           = $this->patient_model->get_patientidbyvisitid($data['visit_details_id']);
+        $data['eye_patient']      = $this->db->where('id', $patient_record['patient_id'])->get('patients')->row_array();
         $data['diagnosis_options'] = $this->prescription_model->getPatientDiagnosisOptions($patient_record['patient_id']);
         $data['medicineCategory'] = $this->medicine_category_model->getMedicineCategory();
         $data['intervaldosage']   = $this->medicine_dosage_model->getIntervalDosage();
@@ -220,6 +237,7 @@ class Prescription extends Admin_Controller
         $radiology                = $this->radio_model->getRadiology();
         $data['radiology']        = $radiology;
         $data["result"]           = $result;
+        $data['eye_patient']       = (array) $result;
         $data['diagnosis_options'] = $this->prescription_model->getPatientDiagnosisOptions($result->patient_id, $result->diagnosis);
         $data["prescription_id"]  = $prescription_id;
         $findingresult            = $this->finding_model->getfindingcategory();
@@ -255,6 +273,7 @@ class Prescription extends Admin_Controller
         $radiology                = $this->radio_model->getRadiology();
         $data['radiology']        = $radiology;
         $data["result"]           = $result;
+        $data['eye_patient']       = (array) $result;
         $data['diagnosis_options'] = $this->prescription_model->getPatientDiagnosisOptions($result->patient_id, $result->diagnosis);
         $data["prescription_id"]  = $prescription_id;
         $findingresult            = $this->finding_model->getfindingcategory();

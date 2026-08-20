@@ -36,6 +36,7 @@ class Migration_Add_optical_prescriptions extends CI_Migration
             `coatings` text NULL,
             `validity_months` smallint NOT NULL DEFAULT 12,
             `notes` text NULL,
+            `ophthalmology_data` text NULL,
             `created_at` datetime NOT NULL,
             `updated_at` datetime NULL,
             PRIMARY KEY (`id`),

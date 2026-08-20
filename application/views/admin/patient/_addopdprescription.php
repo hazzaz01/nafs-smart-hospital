@@ -12,7 +12,7 @@
                                 </div> 
                                 <hr/>
                             </div>
-                            <?php if (!empty($is_optical_prescription_doctor)) { $this->load->view('admin/patient/_optical_prescription_fields', array('optical_prescription' => $optical_prescription)); } ?>
+                            <?php if (!empty($is_optical_prescription_doctor)) { $this->load->view('admin/patient/_ophthalmology_prescription_fields', array('optical_prescription' => $optical_prescription, 'eye_patient' => $eye_patient)); } ?>
                              <div class="col-sm-12">  
                                 <table class="table table-striped table-bordered table-hover">
                                     <tr>
